@@ -1,0 +1,4 @@
+# Use our custom-configured c++ toolchain.
+build --crosstool_top=@llvm_toolchain//:toolchain
+build --host_crosstool_top=@bazel_tools//tools/cpp:toolchain
+
