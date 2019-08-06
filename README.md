@@ -19,9 +19,19 @@ To work on ebplane, you must:
 
 Binaries can then be found in the `bazel-bin` directory.
 
-The build environment transparently uses a docker container with all the
-necesseray tooling installed to provide hermetic and reproducible builds.
-Your system does not need a compiler, linker or development header files installed.
+The build environment transparently downloads and uses a default toolchain.
+Your system does not need compiler, linker or header files installed.
+
+However, if you receive a python stack trace with the error:
+
+    Failed to detect host OS version: [...]
+
+It means there is no pre-built environment for your platform.
+We recommend you send a PR to update:
+
+    https://github.com/grailbio/bazel-toolchain/blob/master/toolchain/tools/llvm_release_name.py#L34
+
+and/or pass `TODO` flag to use a local clang install.
 
 
 # Developing ebplane
