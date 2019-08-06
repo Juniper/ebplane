@@ -1,5 +1,3 @@
-#include "example/lib/hello-time.h"
-#include "example/hello-greet.h"
 #include <iostream>
 #include <string>
 
@@ -8,7 +6,6 @@ int main(int argc, char** argv) {
   if (argc > 1) {
     who = argv[1];
   }
-  std::cout << get_greet(who) << std::endl;
-  print_localtime();
+  std::cout << "hello " << who << std::endl;
   return 0;
 }
