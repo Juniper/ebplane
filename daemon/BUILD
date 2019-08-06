@@ -5,3 +5,11 @@ cc_binary(
 	"//lib:ebpd"
     ],
 )
+
+cc_test(
+    name = "main_test",
+    srcs = ["main_test.cc"],
+    deps = [
+	"//lib:ebpd"
+    ],
+)
