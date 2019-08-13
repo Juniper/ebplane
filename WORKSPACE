@@ -16,9 +16,9 @@ http_archive(
 # Change master to the git tag you want.
 http_archive(
     name = "com_grail_bazel_toolchain",
-    sha256 = "5ce22afa5b022adaf4644f2f5fc8727bc10c304f9f7539bd6ebda60569c9fd68",
-    strip_prefix = "bazel-toolchain-master",
-    urls = ["https://github.com/grailbio/bazel-toolchain/archive/master.tar.gz"],
+    sha256 = "90e34dbd97e27fa2a0229bff5e1e3d3e56db8c93d64ddb15e3ba7d787c497898",
+    strip_prefix = "bazel-toolchain-f6b6ec8e1398f7163e6bf21599d3c58ad74a5966",
+    urls = ["https://github.com/grailbio/bazel-toolchain/archive/f6b6ec8.tar.gz"],
 )
 
 load("@com_grail_bazel_toolchain//toolchain:rules.bzl", "llvm_toolchain")
