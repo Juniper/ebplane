@@ -1,0 +1,24 @@
+COPTS = [
+    '-Iexternal/libbpf/include',
+    '-Iexternal/libbpf/include/uapi',
+    '-DCOMPAT_NEED_REALLOCARRAY',
+    '-fPIC',
+    '-fvisibility=hidden',
+    '-g',
+    '-O2',
+    '-Werror',
+    '-Wall',
+    '-c',
+]
+
+cc_library(
+    name = "bpf-lib",
+    copts = COPTS,
+    srcs = glob(
+        ["**/*.c"]
+    ),
+    hdrs = glob(
+        ["**/*.h"]
+    ),
+    visibility = ["//visibility:public"],
+)
