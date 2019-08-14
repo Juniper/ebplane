@@ -9,11 +9,16 @@ To work on ebplane, you must:
 
 1) Install bazel, by following the [instructions here](https://docs.bazel.build/versions/master/install.html).
 
-2) Build all the binaries, by running:
+2) Install required packages in the system
+
+        chmod +x ./startup.sh
+        sudo ./startup.sh
+
+3) Build all the binaries, by running:
 
         bazel build ...:all
 
-3) Run the tests, by running:
+4) Run the tests, by running:
 
         bazel test ...:all
 
