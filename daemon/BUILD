@@ -4,6 +4,9 @@ cc_binary(
     deps = [
 	"//lib:ebpd"
     ],
+    data = [
+        "//lib:someData.txt"
+    ],
 )
 
 cc_test(
