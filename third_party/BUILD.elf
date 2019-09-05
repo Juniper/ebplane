@@ -1,10 +1,14 @@
 load("@rules_foreign_cc//tools/build_defs:configure.bzl", "configure_make")
 
-filegroup(name = "libelf_all", srcs = glob(["**"]), visibility = ["//visibility:public"])
+filegroup(name = "elfutils_all", srcs = glob(["**"]), visibility = ["//visibility:public"])
 
 configure_make(
-    name = "libelf",
-    lib_source = ":libelf_all",
+    name = "elfutils",
+    configure_options = [
+        "--enable-valgrind",
+        "CC=/usr/bin/gcc",
+    ],
+    lib_source = ":elfutils_all",
     out_lib_dir = "lib",
     shared_libraries = ['libelf.so'],
     visibility = ["//visibility:public"]
