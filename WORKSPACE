@@ -12,10 +12,10 @@ load("@rules_foreign_cc//:workspace_definitions.bzl", "rules_foreign_cc_dependen
 rules_foreign_cc_dependencies()
 
 http_archive(
-    name = "libelf",
-    url = "https://fossies.org/linux/misc/old/libelf-0.8.13.tar.gz",
-    sha256 = "591a9b4ec81c1f2042a97aa60564e0cb79d041c52faa7416acb38bc95bd2c76d",
-    strip_prefix = "libelf-0.8.13",
+    name = "elfutils",
+    url = "https://sourceware.org/elfutils/ftp/0.177/elfutils-0.177.tar.bz2",
+    sha256 = "fa489deccbcae7d8c920f60d85906124c1989c591196d90e0fd668e3dc05042e",
+    strip_prefix = "elfutils-0.177",
     build_file = "//third_party:BUILD.elf",
 )
 
