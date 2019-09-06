@@ -5,8 +5,10 @@ filegroup(name = "elfutils_all", srcs = glob(["**"]), visibility = ["//visibilit
 configure_make(
     name = "elfutils",
     configure_options = [
-        "--enable-valgrind",
-        "CC=/usr/bin/gcc",
+        "CC=gcc",
+        "AR=''",
+        "CFLAGS=''",
+	"LDFLAGS=''",
     ],
     lib_source = ":elfutils_all",
     out_lib_dir = "lib",
