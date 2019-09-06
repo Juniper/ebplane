@@ -4,6 +4,11 @@ filegroup(name = "elfutils_all", srcs = glob(["**"]), visibility = ["//visibilit
 
 configure_make(
     name = "elfutils",
+
+    # elfutils can only be built with gcc. What you see below is a hack:
+    # it overrides the environment variables set by bazel to use clang with
+    # values that force detection and use of the host installed gcc.
+    # TODO: fix the build to be more hermetic.
     configure_options = [
         "CC=gcc",
         "AR=''",
