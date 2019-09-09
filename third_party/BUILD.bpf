@@ -16,6 +16,6 @@ cc_library(
     hdrs = glob(
         ["**/*.h"]
     ),
-    deps = ["@libelf//:libelf"],
+    deps = ["@elfutils//:elfutils"],
     visibility = ["//visibility:public"],
 )
