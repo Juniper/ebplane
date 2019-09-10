@@ -1,21 +1,21 @@
-COPTS = [
-    '-Iexternal/libbpf/include',
-    '-Iexternal/libbpf/include/uapi',
-    '-DCOMPAT_NEED_REALLOCARRAY',
-    '-fvisibility=hidden',
-    '-Werror',
-    '-Wall',
-]
+load("@rules_foreign_cc//tools/build_defs:make.bzl", "make")
 
-cc_library(
+filegroup(name = "libbpf_all", srcs = glob(["**"]), visibility = ["//visibility:public"])
+
+make(
     name = "libbpf",
-    copts = COPTS,
-    srcs = glob(
-        ["**/*.c"]
-    ),
-    hdrs = glob(
-        ["**/*.h"]
-    ),
-    deps = ["@libelf//:libelf"],
+    make_commands = [
+      "cp -R $$EXT_BUILD_ROOT$$/external/libbpf/include $$INSTALLDIR$$",
+      "BUILD_STATIC_ONLY=y DESTDIR=$$INSTALLDIR$$ INCLUDEDIR=/include LIBDIR=/lib " +
+          "make -C $$EXT_BUILD_ROOT$$/external/libbpf/src install",
+
+      # make commands are concatenated with an & at the end. Either specify
+      # a single command, or keep the wait at the end so the script does not
+      # exit before all commands have completed.
+      # See https://github.com/bazelbuild/rules_foreign_cc/issues/313
+      "wait",
+    ],
+    lib_source = ":libbpf_all",
+    deps = ["@elfutils//:libelf"],
     visibility = ["//visibility:public"],
 )
