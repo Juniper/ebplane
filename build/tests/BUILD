@@ -1,4 +1,5 @@
 load("//build:embed.bzl", "cc_embed")
+load("//build:ebpf.bzl", "cc_ebpf")
 
 cc_embed(
     name = "mediocrity",
@@ -77,5 +78,20 @@ cc_test(
     deps = [
         "@gtest//:gtest_main",
         ":dependency",
+    ]
+)
+
+cc_ebpf(
+  name="ebpf_sample",
+  srcs = ["testdata/ebpf_sample.c"],
+  deps = ["@libbpf"],
+)
+
+cc_test(
+    name = "ebpf_test",
+    srcs = ["ebpf_test.cc"],
+    deps = [
+        "@gtest//:gtest_main",
+        ":ebpf_sample",
     ]
 )
