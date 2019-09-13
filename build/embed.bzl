@@ -61,7 +61,7 @@ def _clean_path(directory):
      The cleaned path, or the original path if the cleaning pattern
      cannot be found.
    """
-   parts = directory.split("/bin/")
+   parts = directory.split("/bin/", 1)
    if len(parts) > 1:
      return _clean_string(parts[1])
    return _clean_string(parts[0])
@@ -90,6 +90,10 @@ def _cc_embed(ctx):
     ### Step 1: Determine the input files to add to the .o file.
     libinputs = []
     for input in ctx.attr.data:
+      # Bazel dependencies can attach arbitrary metadata to a rule via
+      # providers. Check if the dependency is a cc_.* "thing", having
+      # the CcInfo provider. If it is a Cc thing, embed the generated
+      # object files that best work for us.
       if CcInfo not in input:
         continue
       info = input[CcInfo]
@@ -240,7 +244,6 @@ cc_embed = rule(
            default = Label("@bazel_tools//tools/cpp:current_cc_toolchain")
        ),
   },
-  # output_to_genfiles = True,
   toolchains = ["@bazel_tools//tools/cpp:toolchain_type"],
   fragments = ["cpp"],
   doc = """
