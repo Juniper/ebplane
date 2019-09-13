@@ -8,8 +8,8 @@
 // Use the string_view object and interface below instead.
 SYMBOLS
 
-namespace embedded {
+namespace NAMESPACE {
 ACCESSORS
-}  // namespace
+}  // namespace NAMESPACE
 
 #endif  // IFGUARD
