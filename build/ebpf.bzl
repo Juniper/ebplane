@@ -100,4 +100,4 @@ def cc_ebpf(name, **kwargs):
     **kwargs: parameters are passed unchanged to cc_build_ebpf.
   """
   cc_build_ebpf(name = name + "-built-ebpf", **kwargs)
-  cc_embed(name = name, data = [":" + name + "-built-ebpf"])
+  cc_embed(name = name, namespace = "ebpf", data = [":" + name + "-built-ebpf"])
