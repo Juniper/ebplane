@@ -82,7 +82,7 @@ cc_test(
 )
 
 cc_ebpf(
-  name="ebpf_sample",
+  name = "ebpf_sample",
   srcs = ["testdata/ebpf_sample.c"],
   deps = ["@libbpf"],
 )
