@@ -164,7 +164,8 @@ def _cc_embed(ctx):
       symbols.append("extern const char {start};".format(**subs))
       symbols.append("extern const char {end};".format(**subs))
       accessors.append("inline const std::string_view {var}(&{start}, &{end} - &{start});".format(**subs))
-
+    
+    # This is the string used for #ifdef, eg, #ifdef LIB_EBPF_SIMPLE_H_
     ifguard = _clean_path(hfile.path).upper() + "_"
     ctx.actions.expand_template(
       template = ctx.file._template,
