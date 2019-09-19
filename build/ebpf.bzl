@@ -1,3 +1,22 @@
+"""Provides ability to build and embed eBPF bytecode in C/C++ binaries.
+
+The kernel interface for eBPF pretty much requires ELF object files
+compiled for the eBPF platform - containing eBPF bytecode.
+The ELF object files are passed as a string to the syscall, copied
+in kernel space, and executed by the eBPF VM.
+
+This file defines two rules:
+
+- cc_build_ebpf - that simply compiles a .c file into a .pic.o file
+  containing eBPF bytecode.
+
+- cc_ebpf - that uses cc_build_ebpf and cc_embed to actually make the
+  eBPF bytecode available as a std::string_view into a cpp file.
+
+See the documentation for each rule and the examples under tests/ for
+more details.
+"""
+
 load("@bazel_tools//tools/cpp:toolchain_utils.bzl", "find_cpp_toolchain")
 load("@bazel_tools//tools/build_defs/cc:action_names.bzl", "C_COMPILE_ACTION_NAME")
 load("//build:embed.bzl", "cc_embed")
