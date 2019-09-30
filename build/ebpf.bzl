@@ -24,6 +24,9 @@ load("//build:embed.bzl", "cc_embed")
 def _cc_build_ebpf(ctx):
   cc_toolchain = find_cpp_toolchain(ctx)
 
+  # cc_common is the sklark library used to access C/C++ build primitives
+  # in bazel, more details here:
+  #   https://docs.bazel.build/versions/master/skylark/lib/cc_common.html
   feature_configuration = cc_common.configure_features(
      ctx = ctx,
      cc_toolchain = cc_toolchain,
@@ -39,6 +42,10 @@ def _cc_build_ebpf(ctx):
     compilation_contexts.append(dep[CcInfo].compilation_context)
     linking_contexts.append(dep[CcInfo].linking_context)
 
+  # TODO: some of the options here are technically wrong: they use the
+  # default toolchain provided by bazel, and just add flags on top of the
+  # default options. But the default options might not work here, a dedicated
+  # toolchain is required, will be submitted in a separate PR.
   compilation_context, compilation_outputs = cc_common.compile(
       name = ctx.label.name,
       actions = ctx.actions,
