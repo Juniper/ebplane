@@ -71,7 +71,11 @@ def _strip_extensions(s, extensions):
    
    Args:
      s: string, generally a filename.
-     extensions: list of strings, extensions to remove.
+     extensions: list of strings, extensions to remove. Each extension
+       is removed in order. For example, To remove .tar.gz, you can
+       either specify [".tar.gz"] or [".gz", ".tar"]. The former will only
+       remove ".tar.gz", while the latter will remove ".gz", ".tar",
+       ".tar.gz", but not ".gz.tar".
 
    Returns:
      The string with all the supplied extensions removed.
