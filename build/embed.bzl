@@ -66,6 +66,25 @@ def _clean_path(directory):
      return _clean_string(parts[1])
    return _clean_string(parts[0])
 
+def _strip_extensions(s, extensions):
+   """Remove all the specified extensions from the supplied string.
+   
+   Args:
+     s: string, generally a filename.
+     extensions: list of strings, extensions to remove. Each extension
+       is removed in order. For example, To remove .tar.gz, you can
+       either specify [".tar.gz"] or [".gz", ".tar"]. The former will only
+       remove ".tar.gz", while the latter will remove ".gz", ".tar",
+       ".tar.gz", but not ".gz.tar".
+
+   Returns:
+     The string with all the supplied extensions removed.
+   """
+   for e in extensions:
+     if s.endswith(e):
+       s = s[:-len(e)]
+   return s
+
 def _clean_string(s):
    """Replaces invalid characters with _.
 
@@ -143,19 +162,21 @@ def _cc_embed(ctx):
       subs = {
         "start": "_binary_{}_start".format(clean),
         "end": "_binary_{}_end".format(clean),
-        "var": _clean_string(i.path.split("/")[-1]),
+        "var": _clean_string(_strip_extensions(i.path.split("/")[-1], ctx.attr.strip)),
       }
 
       symbols.append("extern const char {start};".format(**subs))
       symbols.append("extern const char {end};".format(**subs))
       accessors.append("inline const std::string_view {var}(&{start}, &{end} - &{start});".format(**subs))
 
-    ifguard = _clean_path(hfile.path).upper()
+    # This is the string used for #ifdef, eg, #ifdef LIB_EBPF_SIMPLE_H_
+    ifguard = _clean_path(hfile.path).upper() + "_"
     ctx.actions.expand_template(
       template = ctx.file._template,
       output = hfile,
       substitutions = {
         "IFGUARD": ifguard,
+        "NAMESPACE": ctx.attr.namespace,
         "SYMBOLS": "\n".join(symbols),
         "ACCESSORS": "\n".join(accessors),
       }
@@ -231,10 +252,18 @@ def _cc_embed(ctx):
 cc_embed = rule(
   implementation = _cc_embed,
   attrs = {
-       "data" : attr.label_list(
+       "data": attr.label_list(
            allow_files = True,
            mandatory = True,
            doc = "Targets to turn into strings and embed in the binary."
+       ),
+       "namespace": attr.string(
+           default = "embedded",
+           doc = "The namespace to use for exporting the symbols in the header."
+       ),
+       "strip": attr.string_list(
+           default = [".o", ".pic"],
+           doc = "Extensions to strip to generate variable names, processed in order."
        ),
        "_template": attr.label(
            default = Label("//build:embed.h.tpl"),
