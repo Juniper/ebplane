@@ -34,6 +34,18 @@ http_archive(
     strip_prefix = "googletest-release-1.8.1",
 )
 
+#
+# Download the longterm stable kernel version in 4.1x series at the time of
+# writing this;
+# NOTE: This is a moving target
+http_archive(
+    name = "linuxsrc",
+    url = "https://cdn.kernel.org/pub/linux/kernel/v4.x/linux-4.15.18.tar.gz",
+    sha256 = "ca13fa5c6e3a6b434556530d92bc1fc86532c2f4f5ae0ed766f6b709322d6495",
+    strip_prefix = "linux-4.15.18",
+    build_file = "//third_party:BUILD.install_linux_hdr",
+)
+
 #############################################################################
 # All rules below are to configure the bazel remote build environment, and bring
 # in clang-8 based toolchains on your system automatically.

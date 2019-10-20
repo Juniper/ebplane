@@ -6,5 +6,6 @@ cc_ebpf(
     name = "sample",
     srcs = ["sample.c"],
     hdrs = ["utils.h"],
+    copts = ["-g"],
     deps = ["@libbpf"],
 )
