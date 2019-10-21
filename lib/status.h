@@ -50,7 +50,7 @@ std::string_view ToString(const Code code);
 // Status is implemented assuming that errors are uncommon and optimizes for the
 // case where IsOk(status) == true.
 //
-// Note that the following helpers exist to check for common conditions:
+// The following helpers exist to check for common conditions:
 // IsOk() and IsError().
 //
 // Specific error code and text may be accessed using the following helpers:
@@ -62,7 +62,7 @@ std::string_view ToString(const Code code);
 //   if (bar > 0) {
 //     return error::kOkStatus;
 //   }
-//   return Status(INVALID_ARGUMENT, "negative bar encountered");
+//   return Status(Code::INVALID_ARGUMENT, "negative bar encountered");
 // }
 //
 // const auto status = Foo(10);
@@ -75,12 +75,12 @@ std::string_view ToString(const Code code);
 //
 class Status {
  public:
-  Status() = default;
+  constexpr Status() = default;
 
   // Construct Status given a numeric error code.
   // Code::OK is a valid input.
   constexpr explicit Status(const Code code) {
-    if (!IsOk(code)) {
+    if (IsError(code)) {
       detail_ = std::make_unique<Detail>(code, "");
     }
   }
@@ -88,7 +88,7 @@ class Status {
   // Construct an error Status given a numeric error code and descriptive text.
   // Code::OK is not a valid input as only error Status may carry text.
   constexpr Status(const Code code, const std::string& text) {
-    INVARIANT_F(IsOk(code));
+    INVARIANT_T(IsError(code));
     detail_ = std::make_unique<Detail>(code, text);
   }
 

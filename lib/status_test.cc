@@ -65,6 +65,10 @@ TEST(StatusTest, SameStringDifferentCode) {
   EXPECT_NE(Status(Code::ABORTED, "foo"), Status(Code::UNKNOWN, "foo"));
 }
 
+TEST(StatusTest, DefaultOk) {
+  EXPECT_TRUE(IsOk(Status()));
+}
+
 TEST(StatusTest, Copy) {
   Status a(Code::ABORTED, "ABORTED");
   Status b(a);
