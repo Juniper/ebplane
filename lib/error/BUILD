@@ -6,6 +6,8 @@ cc_library(
     hdrs = [
         "status.h",
         "status_or.h",
+        "return_if_error.h",
+        "assign_or_return.h",
     ],
     deps = [
         "//lib/base",
@@ -27,6 +29,24 @@ cc_test(
 cc_test(
     name = "status_or_test",
     srcs = ["status_or_test.cc"],
+    deps = [
+	"@gtest//:gtest_main",
+	"//lib/error"
+    ],
+)
+
+cc_test(
+    name = "return_if_error_test",
+    srcs = ["return_if_error_test.cc"],
+    deps = [
+	"@gtest//:gtest_main",
+	"//lib/error"
+    ],
+)
+
+cc_test(
+    name = "assign_or_return_test",
+    srcs = ["assign_or_return_test.cc"],
     deps = [
 	"@gtest//:gtest_main",
 	"//lib/error"
