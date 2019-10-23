@@ -22,11 +22,11 @@ DEFINE_OPAQUE_VALUE(int, Code);
 constexpr Code kOkCode(0);
 
 // Idiom to check for OK code.
-// Return true iff code == Code::OK.
+// Return true iff code == kOkCode.
 inline constexpr bool IsOk(const Code code) { return kOkCode == code; }
 
 // Idiom to check for error codes.
-// Return true iff code != Code::OK.
+// Return true iff code != kOkCode.
 inline constexpr bool IsError(const Code code) { return !IsOk(code); }
 
 // Class describing the result of an operation that may encounter an error.
@@ -56,23 +56,56 @@ inline constexpr bool IsError(const Code code) { return !IsOk(code); }
 //             << ", text: " << GetText(status) << "\n";
 // }
 //
+// In some cases it is useful to preserve the root cause of an error when
+// crossing API boundaries. To facilitate this, Status can optionally nest.
+//
+// Example usage:
+//
+// Status Foo() { return Status(kFooError, "foo error"); }
+// Status Bar() {
+//   const auto foo_status = Foo();
+//   if (IsError(foo_status)) {
+//     return Status(kBarError, "bar error", foo_status);
+//   }
+//   return kOkStatus;
+// }
+//
+// const auto bar_status = Bar();
+// if (IsError(bar_status)) {
+//   std::cout << GetText(bar_status);  // Print bar_status
+//   std::cout << GetText(GetNestedStatus(bar_status));  // Print foo_status
+// }
+//
 class Status {
  public:
   constexpr Status() = default;
 
   // Construct Status given a numeric error code.
-  // Code::OK is a valid input.
+  // kOkCode is a valid input.
   constexpr explicit Status(const Code code) {
     if (IsError(code)) {
-      detail_ = std::make_unique<Detail>(code, "");
+      detail_ = std::make_unique<Detail>(code, "", Status());
     }
   }
 
   // Construct an error Status given a numeric error code and descriptive text.
-  // Code::OK is not a valid input as only error Status may carry text.
+  // kOkCode is not a valid input as only error Status may carry text.
   constexpr Status(const Code code, const std::string& text) {
     INVARIANT_T(IsError(code));
-    detail_ = std::make_unique<Detail>(code, text);
+    detail_ = std::make_unique<Detail>(code, text, Status());
+  }
+
+  // Construct an error Status given a numeric error code, descriptive text and
+  // nested status. kOkCode is not a valid input as only error Status may carry
+  // text or nested status.
+  //
+  // Inspired by Go 2.0 error handling. Nested status is typically used to
+  // preserve the root cause of an error when crossing API boundaries.
+  // Conceptually similar to a stack trace of errors.
+  constexpr Status(const Code code, const std::string& text,
+                   const Status& nested) {
+    INVARIANT_T(IsError(code));
+    detail_ = std::make_unique<Detail>(code, text, nested);
   }
 
   // Default move constructor.
@@ -102,7 +135,7 @@ class Status {
 
  private:
   // Internal representation of non-OK Status.
-  using Detail = std::tuple<Code, std::string>;
+  using Detail = std::tuple<Code, std::string, Status>;
 
   // Return numeric error code.
   friend Code GetCode(const Status& status) {
@@ -114,7 +147,13 @@ class Status {
     return status.detail_ ? std::get<std::string>(*status.detail_) : "";
   }
 
-  // For efficiency Code::OK is represented by nullptr.
+  // Return nested Status.
+  // A status with IsOk(status) == true implicitly contains a nested OK status.
+  friend Status GetNestedStatus(const Status& status) {
+    return status.detail_ ? std::get<Status>(*status.detail_) : Status();
+  }
+
+  // For efficiency kOkCode is represented by nullptr.
   // Default construct as OK.
   std::unique_ptr<const Detail> detail_{nullptr};
 };
@@ -130,11 +169,11 @@ inline bool operator!=(const Status& lhs, const Status& rhs) {
 const Status kOkStatus(kOkCode);
 
 // Idiom to check for OK status.
-// Return true iff GetCode(status) == Code::OK.
+// Return true iff GetCode(status) == kOkCode.
 inline bool IsOk(const Status& status) { return IsOk(GetCode(status)); }
 
 // Idiom to check for non-OK status.
-// Return true iff GetCode(status) != Code::OK.
+// Return true iff GetCode(status) != kOkCode.
 inline bool IsError(const Status& status) { return !IsOk(status); }
 
 }  // namespace error

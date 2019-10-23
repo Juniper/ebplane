@@ -58,8 +58,17 @@ TEST(StatusTest, SameStringDifferentCode) {
   EXPECT_NE(Status(kAborted, "foo"), Status(kUnknown, "foo"));
 }
 
-TEST(StatusTest, DefaultOk) {
-  EXPECT_TRUE(IsOk(Status()));
+TEST(StatusTest, DefaultOk) { EXPECT_TRUE(IsOk(Status())); }
+
+TEST(StatusTest, ImplictNestedOkStatus) {
+  EXPECT_TRUE(IsOk(GetNestedStatus(Status())));
+}
+
+TEST(StatusTest, NestedStatus) {
+  Status a(kAborted, "ABORTED");
+  Status b(kUnknown, "UNKNOWN", a);
+  EXPECT_EQ(kUnknown, GetCode(b));
+  EXPECT_EQ(a, GetNestedStatus(b));
 }
 
 TEST(StatusTest, Copy) {
