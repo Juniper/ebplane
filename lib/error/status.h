@@ -1,50 +1,33 @@
-#ifndef LIB_STATUS_H_
-#define LIB_STATUS_H_
+#ifndef LIB_ERROR_STATUS_H_
+#define LIB_ERROR_STATUS_H_
 
 #include <memory>
 #include <string>
 #include <string_view>
 #include <utility>
 
-#include "lib/invariant.h"
+#include "lib/base/invariant.h"
+#include "lib/base/opaque_value.h"
 
 namespace error {
 
-// Numeric constants describing common classes of errors.
+// Strongly typed integer used to encode specific errors. Code is not
+// interpreted by the core status utilities with the expection of the value zero
+// which is always considered a success.
 //
 // Note that the following helpers exist to check for common conditions:
 // IsOk() and IsError().
-enum class Code {
-  OK = 0,
-  CANCELLED = 1,
-  UNKNOWN = 2,
-  INVALID_ARGUMENT = 3,
-  DEADLINE_EXCEEDED = 4,
-  NOT_FOUND = 5,
-  ALREADY_EXISTS = 6,
-  PERMISSION_DENIED = 7,
-  RESOURCE_EXHAUSTED = 8,
-  FAILED_PRECONDITION = 9,
-  ABORTED = 10,
-  OUT_OF_RANGE = 11,
-  UNIMPLEMENTED = 12,
-  INTERNAL = 13,
-  UNAVAILABLE = 14,
-  DATA_LOSS = 15,
-};
+DEFINE_OPAQUE_VALUE(int, Code);
 
-constexpr Code kOkCode = Code::OK;
+constexpr Code kOkCode(0);
 
 // Idiom to check for OK code.
 // Return true iff code == Code::OK.
-inline constexpr bool IsOk(const Code code) { return Code::OK == code; }
+inline constexpr bool IsOk(const Code code) { return kOkCode == code; }
 
 // Idiom to check for error codes.
 // Return true iff code != Code::OK.
 inline constexpr bool IsError(const Code code) { return !IsOk(code); }
-
-// Return a textual representation of code.
-std::string_view ToString(const Code code);
 
 // Class describing the result of an operation that may encounter an error.
 // Status is implemented assuming that errors are uncommon and optimizes for the
@@ -123,7 +106,7 @@ class Status {
 
   // Return numeric error code.
   friend Code GetCode(const Status& status) {
-    return status.detail_ ? std::get<Code>(*status.detail_) : Code::OK;
+    return status.detail_ ? std::get<Code>(*status.detail_) : kOkCode;
   }
 
   // Return textual description of error or empty string if no text exists.
@@ -156,4 +139,4 @@ inline bool IsError(const Status& status) { return !IsOk(status); }
 
 }  // namespace error
 
-#endif  // LIB_STATUS_H_
+#endif  // LIB_ERROR_STATUS_H_

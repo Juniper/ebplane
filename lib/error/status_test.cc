@@ -1,27 +1,20 @@
 #include <array>
+#include <limits>
 
 #include "gtest/gtest.h"
-#include "lib/status.h"
+#include "lib/error/status.h"
 
 using namespace error;
 
-std::array<Code, 15> kErrorCodes = {
-    Code::CANCELLED,
-    Code::UNKNOWN,
-    Code::INVALID_ARGUMENT,
-    Code::DEADLINE_EXCEEDED,
-    Code::NOT_FOUND,
-    Code::ALREADY_EXISTS,
-    Code::PERMISSION_DENIED,
-    Code::RESOURCE_EXHAUSTED,
-    Code::FAILED_PRECONDITION,
-    Code::ABORTED,
-    Code::OUT_OF_RANGE,
-    Code::UNIMPLEMENTED,
-    Code::INTERNAL,
-    Code::UNAVAILABLE,
-    Code::DATA_LOSS,
+std::array<Code, 4> kErrorCodes = {
+    Code(1),
+    Code(-1),
+    Code(std::numeric_limits<int>::min()),
+    Code(std::numeric_limits<int>::max()),
 };
+
+constexpr Code kAborted(1);
+constexpr Code kUnknown(2);
 
 TEST(StatusTest, CodeIsOk) {
   EXPECT_TRUE(IsOk(kOkCode));
@@ -58,11 +51,11 @@ TEST(StatusTest, Inequality) {
 }
 
 TEST(StatusTest, SameCodeDifferentString) {
-  EXPECT_NE(Status(Code::ABORTED, "foo"), Status(Code::ABORTED, "bar"));
+  EXPECT_NE(Status(kAborted, "foo"), Status(kAborted, "bar"));
 }
 
 TEST(StatusTest, SameStringDifferentCode) {
-  EXPECT_NE(Status(Code::ABORTED, "foo"), Status(Code::UNKNOWN, "foo"));
+  EXPECT_NE(Status(kAborted, "foo"), Status(kUnknown, "foo"));
 }
 
 TEST(StatusTest, DefaultOk) {
@@ -70,14 +63,14 @@ TEST(StatusTest, DefaultOk) {
 }
 
 TEST(StatusTest, Copy) {
-  Status a(Code::ABORTED, "ABORTED");
+  Status a(kAborted, "ABORTED");
   Status b(a);
   Status c = b;
   EXPECT_EQ(a, c);
 }
 
 TEST(StatusTest, Move) {
-  Status a(Code::ABORTED, "ABORTED");
+  Status a(kAborted, "ABORTED");
   Status b(a);
   Status c(std::move(b));
   Status d = std::move(c);
@@ -85,8 +78,8 @@ TEST(StatusTest, Move) {
 }
 
 TEST(StatusTest, CopyOverwrite) {
-  Status a(Code::ABORTED, "ABORTED");
-  Status b(Code::UNKNOWN, "UNKNOWN");
+  Status a(kAborted, "ABORTED");
+  Status b(kUnknown, "UNKNOWN");
   EXPECT_NE(a, b);
   b = a;
   EXPECT_EQ(a, b);
@@ -94,7 +87,7 @@ TEST(StatusTest, CopyOverwrite) {
 
 TEST(StatusTest, EmptyOverwrite) {
   Status a;
-  Status b(Code::UNKNOWN, "UNKNOWN");
+  Status b(kUnknown, "UNKNOWN");
   EXPECT_TRUE(IsOk(a));
   EXPECT_NE(a, b);
   b = a;
@@ -111,7 +104,7 @@ TEST(StatusTest, GetCode) {
 TEST(StatusTest, GetText) {
   EXPECT_EQ("", GetText(Status(kOkCode)));
   for (const auto code : kErrorCodes) {
-    EXPECT_EQ(ToString(code),
-              GetText(Status(code, std::string(ToString(code)))));
+    EXPECT_EQ(std::to_string(GetValue(code)),
+              GetText(Status(code, std::to_string(GetValue(code)))));
   }
 }

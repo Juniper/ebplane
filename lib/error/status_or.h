@@ -1,10 +1,10 @@
-#ifndef LIB_STATUS_OR_H_
-#define LIB_STATUS_OR_H_
+#ifndef LIB_ERROR_STATUS_OR_H_
+#define LIB_ERROR_STATUS_OR_H_
 
 #include <variant>
 
-#include "lib/invariant.h"
-#include "lib/status.h"
+#include "lib/base/invariant.h"
+#include "lib/error/status.h"
 
 namespace error {
 namespace impl {
@@ -99,4 +99,4 @@ inline const T&& GetValue(const StatusOr<T>&& status_or) {
 
 }  // namespace error
 
-#endif  // LIB_STATUS_OR_H_
+#endif  // LIB_ERROR_STATUS_OR_H_

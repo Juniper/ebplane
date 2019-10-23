@@ -1,10 +1,12 @@
 #include "gtest/gtest.h"
-#include "lib/status_or.h"
+#include "lib/error/status_or.h"
 
 using namespace error;
 
+constexpr Code kCancelled(3);
+
 TEST(StatusOrTest, Construct) {
-  Status cancelled(Code::CANCELLED);
+  Status cancelled(kCancelled);
   StatusOr<int> a{cancelled};
   EXPECT_TRUE(IsError(a));
   EXPECT_EQ(cancelled, GetStatus(a));
