@@ -1,5 +1,5 @@
-#ifndef EBPD_UTILS_H_
-#define EBPD_UTILS_H_
+#ifndef LIB_EBPD_UTILS_H_
+#define LIB_EBPD_UTILS_H_
 
 #ifdef __cplusplus
 extern "C"
