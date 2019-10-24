@@ -33,6 +33,14 @@ We recommend you send a PR to update:
 
 and/or pass `TODO` flag to use a local clang install.
 
+If you see the following error while building:
+
+   /usr/include/stdint.h:26:10: fatal error: 'bits/libc-header-start.h' file not found
+
+On Ubuntu this can be resolved by installing:
+
+   apt install gcc-multilib g++-multilib
+
 
 # Developing ebplane
 
