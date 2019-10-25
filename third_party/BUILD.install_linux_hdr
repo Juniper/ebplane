@@ -1,0 +1,16 @@
+load("@rules_foreign_cc//tools/build_defs:make.bzl", "make")
+
+filegroup(name = "linuxsrc_all", srcs = glob(["**"]), visibility = ["//visibility:public"])
+
+make(
+    name = "installhdr",
+    make_commands = [
+      "make -C $$EXT_BUILD_ROOT$$/external/linuxsrc headers_install INSTALL_HDR_PATH=$$INSTALLDIR$$",
+      # touch .a file to avoid the error
+      "touch $$INSTALLDIR$$/lib/installhdr.a",
+      "wait",
+    ],
+    lib_source = ":linuxsrc_all",
+    visibility = ["//visibility:public"],
+)
+
