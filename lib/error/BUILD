@@ -23,6 +23,15 @@ cc_library(
 )
 
 cc_test(
+    name = "code_test",
+    srcs = ["code_test.cc"],
+    deps = [
+        "//lib/error",
+        "@gtest//:gtest_main",
+    ],
+)
+
+cc_test(
     name = "errno_test",
     srcs = ["errno_test.cc"],
     deps = [
