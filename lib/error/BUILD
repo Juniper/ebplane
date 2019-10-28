@@ -3,17 +3,31 @@
 # should use this library to report errors to the caller.
 cc_library(
     name = "error",
+    srcs = [
+        "errno.cc",
+    ],
     hdrs = [
+        "assign_or_return.h",
+        "code.h",
+        "errno.h",
+        "return_if_error.h",
         "status.h",
         "status_or.h",
-        "return_if_error.h",
-        "assign_or_return.h",
+    ],
+    visibility = [
+        "//visibility:public",
     ],
     deps = [
         "//lib/base",
     ],
-    visibility = [
-        "//visibility:public"
+)
+
+cc_test(
+    name = "errno_test",
+    srcs = ["errno_test.cc"],
+    deps = [
+        "//lib/error",
+        "@gtest//:gtest_main",
     ],
 )
 
@@ -21,8 +35,8 @@ cc_test(
     name = "status_test",
     srcs = ["status_test.cc"],
     deps = [
-	"@gtest//:gtest_main",
-	"//lib/error"
+        "//lib/error",
+        "@gtest//:gtest_main",
     ],
 )
 
@@ -30,8 +44,8 @@ cc_test(
     name = "status_or_test",
     srcs = ["status_or_test.cc"],
     deps = [
-	"@gtest//:gtest_main",
-	"//lib/error"
+        "//lib/error",
+        "@gtest//:gtest_main",
     ],
 )
 
@@ -39,8 +53,8 @@ cc_test(
     name = "return_if_error_test",
     srcs = ["return_if_error_test.cc"],
     deps = [
-	"@gtest//:gtest_main",
-	"//lib/error"
+        "//lib/error",
+        "@gtest//:gtest_main",
     ],
 )
 
@@ -48,7 +62,7 @@ cc_test(
     name = "assign_or_return_test",
     srcs = ["assign_or_return_test.cc"],
     deps = [
-	"@gtest//:gtest_main",
-	"//lib/error"
+        "//lib/error",
+        "@gtest//:gtest_main",
     ],
 )

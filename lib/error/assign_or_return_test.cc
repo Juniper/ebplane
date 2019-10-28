@@ -1,10 +1,11 @@
 #include "lib/error/assign_or_return.h"
 #include "gtest/gtest.h"
+#include "lib/error/errno.h"
 #include "lib/error/status_or.h"
 
 using namespace error;
 
-const Status kDefault(Code(1), "default");
+const Status kDefault(MakeCodeFromErrno(ECHILD), "default");
 
 TEST(TryAssignTest, CopyableStatusOr) {
   constexpr auto fn = [](StatusOr<int> s) -> StatusOr<int> {

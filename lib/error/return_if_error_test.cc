@@ -1,11 +1,12 @@
 #include "lib/error/return_if_error.h"
 #include "gtest/gtest.h"
+#include "lib/error/errno.h"
 #include "lib/error/status.h"
 
 using namespace error;
 
-const Status kDefault(Code(1), "default");
-const Status kOther(Code(2), "other");
+const Status kDefault(MakeCodeFromErrno(ENOEXEC), "default");
+const Status kOther(MakeCodeFromErrno(EBADF), "other");
 
 TEST(TryTest, Status) {
   constexpr auto fn = [](const Status s) {

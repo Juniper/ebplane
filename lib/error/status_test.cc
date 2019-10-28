@@ -2,19 +2,20 @@
 #include <limits>
 
 #include "gtest/gtest.h"
+#include "lib/error/errno.h"
 #include "lib/error/status.h"
 
 using namespace error;
 
-std::array<Code, 4> kErrorCodes = {
-    Code(1),
-    Code(-1),
-    Code(std::numeric_limits<int>::min()),
-    Code(std::numeric_limits<int>::max()),
+const std::array<const Code, 4> kErrorCodes = {
+    MakeCodeFromErrno(EPERM),
+    MakeCodeFromErrno(ENOENT),
+    MakeCodeFromErrno(ESRCH),
+    MakeCodeFromErrno(EINTR),
 };
 
-constexpr Code kAborted(1);
-constexpr Code kUnknown(2);
+const Code kAborted = MakeCodeFromErrno(EIO);
+const Code kUnknown = MakeCodeFromErrno(ENXIO);
 
 TEST(StatusTest, CodeIsOk) {
   EXPECT_TRUE(IsOk(kOkCode));
@@ -113,7 +114,6 @@ TEST(StatusTest, GetCode) {
 TEST(StatusTest, GetText) {
   EXPECT_EQ("", GetText(Status(kOkCode)));
   for (const auto code : kErrorCodes) {
-    EXPECT_EQ(std::to_string(GetValue(code)),
-              GetText(Status(code, std::to_string(GetValue(code)))));
+    EXPECT_EQ(code.message(), GetText(Status(code, code.message())));
   }
 }
