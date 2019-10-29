@@ -58,7 +58,7 @@ namespace error {
 //   std::cout << GetText(GetNestedStatus(bar_status));  // Print foo_status
 // }
 //
-class Status {
+class [[nodiscard]] Status {
  public:
   constexpr Status() = default;
 
@@ -90,7 +90,7 @@ class Status {
   }
 
   // Default move constructor.
-  Status(Status&&) = default;
+  Status(Status &&) = default;
 
   // Default move assignment operator.
   Status& operator=(Status&&) = default;

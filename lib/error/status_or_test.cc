@@ -1,8 +1,9 @@
 #include "lib/error/status_or.h"
 #include "gtest/gtest.h"
-#include "lib/error/errno.h"
+#include "lib/posix/errno.h"
 
 using namespace error;
+using namespace posix;
 
 const Code kCancelled = MakeCodeFromErrno(E2BIG);
 
