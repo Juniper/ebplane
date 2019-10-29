@@ -1,9 +1,10 @@
-#include "gtest/gtest.h"
 #include "lib/error/status_or.h"
+#include "gtest/gtest.h"
+#include "lib/error/errno.h"
 
 using namespace error;
 
-constexpr Code kCancelled(3);
+const Code kCancelled = MakeCodeFromErrno(E2BIG);
 
 TEST(StatusOrTest, Construct) {
   Status cancelled(kCancelled);

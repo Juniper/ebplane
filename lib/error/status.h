@@ -7,27 +7,9 @@
 #include <utility>
 
 #include "lib/base/invariant.h"
-#include "lib/base/opaque_value.h"
+#include "lib/error/code.h"
 
 namespace error {
-
-// Strongly typed integer used to encode specific errors. Code is not
-// interpreted by the core status utilities with the expection of the value zero
-// which is always considered a success.
-//
-// Note that the following helpers exist to check for common conditions:
-// IsOk() and IsError().
-DEFINE_OPAQUE_VALUE(int, Code);
-
-constexpr Code kOkCode(0);
-
-// Idiom to check for OK code.
-// Return true iff code == kOkCode.
-inline constexpr bool IsOk(const Code code) { return kOkCode == code; }
-
-// Idiom to check for error codes.
-// Return true iff code != kOkCode.
-inline constexpr bool IsError(const Code code) { return !IsOk(code); }
 
 // Class describing the result of an operation that may encounter an error.
 // Status is implemented assuming that errors are uncommon and optimizes for the
@@ -82,7 +64,7 @@ class Status {
 
   // Construct Status given a numeric error code.
   // kOkCode is a valid input.
-  constexpr explicit Status(const Code code) {
+  explicit Status(const Code code) {
     if (IsError(code)) {
       detail_ = std::make_unique<Detail>(code, "", Status());
     }
@@ -90,7 +72,7 @@ class Status {
 
   // Construct an error Status given a numeric error code and descriptive text.
   // kOkCode is not a valid input as only error Status may carry text.
-  constexpr Status(const Code code, const std::string& text) {
+  Status(const Code code, const std::string_view text) {
     INVARIANT_T(IsError(code));
     detail_ = std::make_unique<Detail>(code, text, Status());
   }
@@ -102,8 +84,7 @@ class Status {
   // Inspired by Go 2.0 error handling. Nested status is typically used to
   // preserve the root cause of an error when crossing API boundaries.
   // Conceptually similar to a stack trace of errors.
-  constexpr Status(const Code code, const std::string& text,
-                   const Status& nested) {
+  Status(const Code code, const std::string_view text, const Status& nested) {
     INVARIANT_T(IsError(code));
     detail_ = std::make_unique<Detail>(code, text, nested);
   }
@@ -143,6 +124,8 @@ class Status {
   }
 
   // Return textual description of error or empty string if no text exists.
+  // This should typically provide additional information from the point of
+  // origination beyond what is available in Code.
   friend std::string GetText(const Status& status) {
     return status.detail_ ? std::get<std::string>(*status.detail_) : "";
   }
