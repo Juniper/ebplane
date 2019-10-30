@@ -11,6 +11,10 @@ TEST(UniqueFileDescriptorTest, DefaultConstructEmpty) {
   ASSERT_FALSE(fd);
 }
 
+TEST(UniqueFileDescriptorTest, InvalidCausesDeath) {
+  ASSERT_DEATH({ UniqueFileDescriptor invalid(kInvalidFileDescriptor); }, "");
+}
+
 TEST(UniqueFileDescriptor, CloseIsCalled) {
   // TODO: find a way to mock calls to Close().
 }
