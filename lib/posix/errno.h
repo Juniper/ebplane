@@ -1,13 +1,13 @@
-#ifndef LIB_ERROR_ERRNO_H_
-#define LIB_ERROR_ERRNO_H_
+#ifndef LIB_POSIX_ERRNO_H_
+#define LIB_POSIX_ERRNO_H_
 
 #include "lib/error/code.h"
 #include "lib/error/status.h"
 
-namespace error {
+namespace posix {
 
 // Convert a numeric constant from the system errno.h and friends into a Code.
-inline Code MakeCodeFromErrno(const int e) {
+inline error::Code MakeCodeFromErrno(const int e) {
   return std::system_error(e, std::generic_category()).code();
 }
 
@@ -15,11 +15,11 @@ inline Code MakeCodeFromErrno(const int e) {
 //
 // CaptureErrnoAsCode() is definied in errno.cc to keep the 'errno' macro out of
 // header files whenever possible.
-Code CaptureErrnoAsCode();
+error::Code CaptureErrnoAsCode();
 
 // Idiom to capture 'errno' and construct a Status using that value and 'text'.
-inline Status CaptureErrnoAsStatus(const std::string_view text) {
-  return Status(CaptureErrnoAsCode(), text);
+inline error::Status CaptureErrnoAsStatus(const std::string_view text) {
+  return error::Status(CaptureErrnoAsCode(), text);
 }
 
 // Idiom to capture 'errno' and construct a Status using that value and 'text'
@@ -32,11 +32,11 @@ inline Status CaptureErrnoAsStatus(const std::string_view text) {
 //   return OkStatusOrCaptureErrnoIf(0 != rv, "close() failed");
 // }
 //
-inline Status OkStatusOrCaptureErrnoIf(const bool predicate,
-                                       const std::string_view text) {
-  return predicate ? CaptureErrnoAsStatus(text) : kOkStatus;
+inline error::Status OkStatusOrCaptureErrnoIf(const bool predicate,
+                                              const std::string_view text) {
+  return predicate ? CaptureErrnoAsStatus(text) : error::kOkStatus;
 }
 
-}  // namespace error
+}  // namespace posix
 
-#endif  // LIB_ERROR_ERRNO_H_
+#endif  // LIB_POSIX_ERRNO_H_

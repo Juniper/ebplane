@@ -1,7 +1,8 @@
-#include "lib/error/errno.h"
+#include "lib/posix/errno.h"
 #include "gtest/gtest.h"
 
 using namespace error;
+using namespace posix;
 
 TEST(ErrnoTest, MakeCodeFromErrno) {
   EXPECT_EQ(std::make_error_code(std::errc::interrupted),

@@ -1,11 +1,11 @@
 #include <array>
-#include <limits>
 
 #include "gtest/gtest.h"
-#include "lib/error/errno.h"
 #include "lib/error/status.h"
+#include "lib/posix/errno.h"
 
 using namespace error;
+using namespace posix;
 
 const std::array<const Code, 4> kErrorCodes = {
     MakeCodeFromErrno(EPERM),

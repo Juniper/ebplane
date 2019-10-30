@@ -1,9 +1,10 @@
 #include "lib/error/return_if_error.h"
 #include "gtest/gtest.h"
-#include "lib/error/errno.h"
 #include "lib/error/status.h"
+#include "lib/posix/errno.h"
 
 using namespace error;
+using namespace posix;
 
 const Status kDefault(MakeCodeFromErrno(ENOEXEC), "default");
 const Status kOther(MakeCodeFromErrno(EBADF), "other");

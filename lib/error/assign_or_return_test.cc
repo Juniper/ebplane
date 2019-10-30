@@ -1,9 +1,10 @@
 #include "lib/error/assign_or_return.h"
 #include "gtest/gtest.h"
-#include "lib/error/errno.h"
 #include "lib/error/status_or.h"
+#include "lib/posix/errno.h"
 
 using namespace error;
+using namespace posix;
 
 const Status kDefault(MakeCodeFromErrno(ECHILD), "default");
 
