@@ -90,7 +90,7 @@ class UniqueValue {
   }
 
   // Return true iff this object contains a value.
-  explicit constexpr operator bool() const { return value_; }
+  explicit constexpr operator bool() const { return static_cast<bool>(value_); }
 
  private:
   // Return the contained value.

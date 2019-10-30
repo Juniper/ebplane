@@ -14,6 +14,28 @@ TEST(UniqueValueTest, DefaultConstructor) {
   ASSERT_TRUE(cleanups.empty());
 }
 
+TEST(UniqueValueTest, GetValue) {
+  struct Cleanup {
+    void operator()(const int) {}
+  };
+  ASSERT_EQ(50, GetValue(UniqueValue<int, Cleanup>(50)));
+}
+
+TEST(UniqueValueTest, OperatorStar) {
+  struct Cleanup {
+    void operator()(const int) {}
+  };
+  ASSERT_EQ(50, *(UniqueValue<int, Cleanup>(50)));
+}
+
+TEST(UniqueValueTest, OperatorBool) {
+  struct Cleanup {
+    void operator()(const int) {}
+  };
+  ASSERT_FALSE((UniqueValue<int, Cleanup>()));
+  ASSERT_TRUE((UniqueValue<int, Cleanup>(50)));
+}
+
 TEST(UniqueValueTest, ExplicitValueConstructor) {
   static std::queue<int> cleanups;
   struct Cleanup {
