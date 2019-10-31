@@ -6,7 +6,7 @@ namespace base {
 // Idiom to ignore an otherwise unused variable or result.
 // Prefer to (void) cast when dealing with [[nodiscard]].
 template <typename T>
-void Ignore(const T&) {}
+inline void Ignore(const T&) {}
 
 }  // namespace base
 

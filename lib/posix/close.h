@@ -10,6 +10,9 @@
 
 namespace posix {
 
+// close() syscall wrapper.
+//
+// See "man 2 close" for details.
 inline ::error::Status Close(const FileDescriptor fd) {
   const auto rv = ::close(GetValue(fd));
   return OkStatusOrCaptureErrnoIf(-1 == rv, "close() failed");

@@ -41,6 +41,14 @@ struct UniqueFileDescriptorDtor {
 using UniqueFileDescriptor =
     base::UniqueValue<FileDescriptor, impl::UniqueFileDescriptorDtor>;
 
+// Idiom to wrap a raw integer fd in a UniqueFileDescriptor.
+// Takes ownership of 'raw_fd'.
+inline UniqueFileDescriptor MakeUniqueFileDescriptor(const int raw_fd) {
+  const FileDescriptor fd(raw_fd);
+  INVARIANT_T(IsWellFormed(fd));
+  return UniqueFileDescriptor(fd);
+}
+
 }  // namespace posix
 
 #endif  // LIB_POSIX_UNIQUE_FILE_DESCRIPTOR_H_
