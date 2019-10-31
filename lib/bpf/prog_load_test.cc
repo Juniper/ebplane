@@ -5,4 +5,6 @@
 
 using namespace bpf;
 
-TEST(ProgLoadTest, Syscall) {}
+TEST(ProgLoadTest, Placeholder) {
+  // TODO: ProgLoad() is not yet complete.
+}

@@ -17,15 +17,6 @@ cc_library(
 )
 
 cc_test(
-    name = "bpf_test",
-    srcs = ["bpf_test.cc"],
-    deps = [
-        "//lib/bpf",
-        "@gtest//:gtest_main",
-    ],
-)
-
-cc_test(
     name = "prog_load_test",
     srcs = ["prog_load_test.cc"],
     deps = [
