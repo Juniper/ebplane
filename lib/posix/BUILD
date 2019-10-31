@@ -7,6 +7,8 @@ cc_library(
         "close.h",
         "errno.h",
         "file_descriptor.h",
+        "ifindex.h",
+        "syscall.h",
         "unique_file_descriptor.h",
     ],
     visibility = [
@@ -32,6 +34,15 @@ cc_test(
     srcs = [
         "unique_file_descriptor_test.cc",
     ],
+    deps = [
+        "//lib/posix",
+        "@gtest//:gtest_main",
+    ],
+)
+
+cc_test(
+    name = "syscall_test",
+    srcs = ["syscall_test.cc"],
     deps = [
         "//lib/posix",
         "@gtest//:gtest_main",
