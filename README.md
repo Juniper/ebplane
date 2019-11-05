@@ -5,9 +5,12 @@ its supporting libraries, tools, and documentation.
 
 # Working on ebplane
 
+## Install development tools locally
 To work on ebplane, you must:
 
-1) Install bazel, by following the [instructions here](https://docs.bazel.build/versions/master/install.html).
+1) Install bazel, by following the [instructions here](https://docs.bazel.build/versions/master/install.html). 
+Make sure you install version [0.29.1](https://github.com/bazelbuild/bazel/releases/tag/0.29.1), 
+newer versions do not yet work.
 
 2) Build all the binaries, by running:
 
@@ -40,6 +43,13 @@ If you see the following error while building:
 On Ubuntu this can be resolved by installing:
 
    apt install gcc-multilib g++-multilib
+
+
+## Docker build container
+
+Instead of installing the build tools locally you could also use a docker 
+container that will install all the required tools. For more details see the
+[README.md](docker/README.md) in the docker folder.
 
 
 # Developing ebplane
