@@ -78,11 +78,11 @@ llvm_register_toolchains()
 
 http_archive(
     name = "bazel_toolchains",
-    sha256 = "e71eadcfcbdb47b4b740eb48b32ca4226e36aabc425d035a18dd40c2dda808c1",
-    strip_prefix = "bazel-toolchains-0.28.4",
+    sha256 = "388da5cc148a43081c30c260ce1167747d8fb0968ee220e4ee1d1b1b8212eaa3",
+    strip_prefix = "bazel-toolchains-0.29.9",
     urls = [
-        "https://mirror.bazel.build/github.com/bazelbuild/bazel-toolchains/archive/0.28.4.tar.gz",
-        "https://github.com/bazelbuild/bazel-toolchains/archive/0.28.4.tar.gz",
+        "https://mirror.bazel.build/github.com/bazelbuild/bazel-toolchains/archive/0.29.9.tar.gz",
+        "https://github.com/bazelbuild/bazel-toolchains/archive/0.29.9.tar.gz",
     ],
 )
 
