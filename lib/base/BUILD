@@ -17,6 +17,7 @@ cc_library(
         "ignore.h",
         "invariant.h",
         "opaque_value.h",
+        "span.h",
         "unique_value.h",
     ],
     visibility = [
@@ -36,6 +37,15 @@ cc_test(
 cc_test(
     name = "unique_value_test",
     srcs = ["unique_value_test.cc"],
+    deps = [
+        "//lib/base",
+        "@gtest//:gtest_main",
+    ],
+)
+
+cc_test(
+    name = "span_test",
+    srcs = ["span_test.cc"],
     deps = [
         "//lib/base",
         "@gtest//:gtest_main",
