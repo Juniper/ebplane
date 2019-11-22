@@ -23,6 +23,8 @@ extern int ebpd_load_xdp_buffer (void *buf, int buf_size, const char *name, void
  */
 extern void ebpd_unload (void *handle);
 
+extern void ebpd_override_libbpf_print_func (void);
+
 #ifdef __cplusplus
 } // extern "C"
 #endif

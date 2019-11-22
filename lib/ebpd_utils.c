@@ -33,6 +33,19 @@ ebpd_load_xdp_buffer (void *buf, int buf_size, const char *name, void **handle)
         return PTR_ERR(obj);
     }
     printf("BPF buffer opened, obj: %p\n", obj);
+    struct bpf_program *prog = NULL;
+    /* set the prog_type to XDP for each program */
+    bpf_object__for_each_program(prog, obj) {
+        if (IS_ERR_OR_NULL(prog)) {
+            return PTR_ERR(prog);
+        }
+        bpf_program__set_type(prog, BPF_PROG_TYPE_XDP);
+        /*
+         * Do not set ifindex as part of this, which again
+         * results in syscall failure. That should probably
+         * be done as part of set link api (To be explored)
+         */
+    }
     int ret = bpf_object__load(obj);
     switch (ret) {
     case 0:
@@ -52,5 +65,23 @@ ebpd_unload (void *handle)
         struct bpf_object *obj = (struct bpf_object *) handle;
         bpf_object__close(obj);
     }
+}
+
+static int
+ebpd_libbpf_print_func (enum libbpf_print_level level,
+                        const char *format,
+                        va_list args)
+{
+     return printf(format, args);
+}
+
+/*
+ * The default libbpf print function doesn't print LIBBPF_DEBUG
+ * level messages; Hence overriding with ours
+ */
+void
+ebpd_override_libbpf_print_func (void)
+{
+    libbpf_set_print(ebpd_libbpf_print_func);
 }
 

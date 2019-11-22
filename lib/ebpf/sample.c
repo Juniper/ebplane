@@ -11,3 +11,6 @@ int xdp_pass(struct xdp_md *ctx)
     return XDP_PASS;
 }
 
+__section("license")
+char _license[] = "GPL";
+
